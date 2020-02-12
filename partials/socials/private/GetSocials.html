@@ -7,15 +7,15 @@ For new services, simply add their svg file in `partials/svg/{ service }.svg`
 
 {{/* Defaults: */}}
 {{ $socials := slice "facebook" "twitter" "instagram" "linkedin" "meetup" "slack" }}
-{{ with .socials }}
+{{ if reflect.IsSlice . }}
   {{ $socials = . }}
 {{ end }}
 
 {{/* If a service added later on uses a differnet pattern than https://{ service }.com, add to following: */}}
 {{ $social_urls := dict "some_service" "https://some_weird_url_for_this_service.com/" }}
 {{ $return := slice }}
-{{ range $socials }}
-  {{ $service := . }}
+{{ range $service := $socials }}
+  {{ $partial := false }}
   {{ with index site.Social $service }}
     {{ $url := printf "https://%s.com/" $service }}
     {{ with index $social_urls $service }}
@@ -27,7 +27,10 @@ For new services, simply add their svg file in `partials/svg/{ service }.svg`
     {{ else }}
       {{ $url = printf "%s%s" $url . }}
     {{ end }}
-    {{ $return = $return | append (dict "URL" $url "Name" ($service | humanize)) }}
+    {{ if templates.Exists (printf "partials/socials/svg/%s.svg" $service) }}
+      {{ $partial = printf "socials/svg/%s.svg" $service }}
+    {{ end }}
+    {{ $return = $return | append (dict "URL" $url "Name" ($service | humanize) "Partial" $partial) }}
   {{ end }}
 {{ end }}
 

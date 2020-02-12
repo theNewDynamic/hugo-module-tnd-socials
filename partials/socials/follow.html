@@ -1,6 +1,10 @@
 {{ range partialCached "socials/private/GetSocials" . . }}
   <a href="{{ .URL }}" title="{{ .Name }}" class="{{ .Name }} no-underline">
-    {{ $svg_path := printf "socials/svg/%s.svg" .Name }}
-    {{ partial $svg_path (dict "size" "30px") }}
+    {{ $svg_path := printf "socials/svg/%s.svg" (lower .Name) }}
+    {{ with .Partial }}
+      {{ partial . . }}
+    {{ else }}
+    {{ .Name }}
+    {{ end }}
   </a>
 {{ end }}
