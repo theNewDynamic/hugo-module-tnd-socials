@@ -1,3 +1,3 @@
-module github.com/theNewDynamic/hugo-module-socials
+module github.com/theNewDynamic/hugo-module-tnd-socials
 
 go 1.12
