@@ -1,12 +1,23 @@
 {{/*
-Partial expect as context a map with either or both or none of the following arguments:
-icon_size > sring with size in css.
-socials > slice of string of service names to overwrite the default ones and their order.
-For new services, simply add their svg file in `partials/svg/{ service }.svg`
- */}}
+  GetSocials
+  Retrieves the data for social services listed as default or though 
+  slice context.
+
+  @author @regisphilibert
+
+  @context Slice of Strings (.)
+
+  @access private
+
+  @return Slice of Maps
+    - String (.Name)
+      String (.URL)
+      SVG (String of HTML)
+
+*/}}
 
 {{/* Defaults: */}}
-{{ $socials := slice "facebook" "twitter" "instagram" "linkedin" "meetup" "slack" }}
+{{ $socials := slice "facebook" "twitter" "instagram" "linkedin" "meetup" "slack" "pinterest" }}
 {{ if reflect.IsSlice . }}
   {{ $socials = . }}
 {{ end }}
@@ -15,7 +26,7 @@ For new services, simply add their svg file in `partials/svg/{ service }.svg`
 {{ $social_urls := dict "some_service" "https://some_weird_url_for_this_service.com/" }}
 {{ $return := slice }}
 {{ range $service := $socials }}
-  {{ $partial := false }}
+  {{ $svg := false }}
   {{ with index site.Social $service }}
     {{ $url := printf "https://%s.com/" $service }}
     {{ with index $social_urls $service }}
@@ -27,10 +38,10 @@ For new services, simply add their svg file in `partials/svg/{ service }.svg`
     {{ else }}
       {{ $url = printf "%s%s" $url . }}
     {{ end }}
-    {{ if templates.Exists (printf "partials/socials/svg/%s.svg" $service) }}
-      {{ $partial = printf "socials/svg/%s.svg" $service }}
+    {{ with partial "tnd-socials/private/func/GetIcon" $service}}
+      {{ $svg = . }}
     {{ end }}
-    {{ $return = $return | append (dict "URL" $url "Name" ($service | humanize) "Partial" $partial) }}
+    {{ $return = $return | append (dict "URL" $url "Name" ($service | humanize) "SVG" $svg) }}
   {{ end }}
 {{ end }}
 
