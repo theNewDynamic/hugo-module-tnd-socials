@@ -23,7 +23,7 @@
 {{ with resources.Get (print "tnd-socials/svgs/" . ".svg") }}
   {{ $svg = . }}
 {{ else }}
-  {{ with partial "tnd-icons/private/GetIcon" . }}
+  {{ with partial "tnd-icons/private/func/GetIcon" . }}
     {{ $svg = . }}
   {{ end }}
 {{ end }}
