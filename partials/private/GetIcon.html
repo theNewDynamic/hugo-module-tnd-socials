@@ -1,0 +1,27 @@
+{{/*
+  GetIcon
+
+  It look user's icon overwrites in assets/tnd-socials, and if not found
+  relies on tnd-icons/icon partial.
+
+  @author @regisphilibert
+
+  @context String (.)
+
+  @access private
+
+  @return String of safe HTML
+
+  @example - Go Template
+    {{ $icon := partialCached "tnd-socials/private/GetIcon" $icon $icon }}
+*/}}
+{{ $icon := printf "%s icon is not found" $ }}
+{{ with resources.Get (printf "tnd-socials/%s.svg" $) }}
+  {{ $icon = .Content | safeHTML }}
+{{ else }}
+  {{ with partialCached "tnd-icons/icon" $ $ }}
+    {{ $icon = . }}
+  {{ end }}
+{{ end }}
+
+{{ return $icon }}

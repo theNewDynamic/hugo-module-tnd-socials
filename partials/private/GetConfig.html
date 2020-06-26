@@ -1,0 +1,42 @@
+{{/*
+  GetConfig
+
+  Retrieves the settings from site.Params.tnd_socials. If not tnd_socials.services is found, it will look
+  for site.Social and parse them accordingly.
+
+  @author @regisphilibert
+
+  @context String
+
+  @access private
+
+  @return Map
+      Slice of Map (.services)
+        - String (.Handle)
+          String (.Name)
+          String (.URL)
+          HTML String (.Icon)
+
+  @example - Go Template
+    {{ $config := partialCached "tnd-socials/private/GetConfig" "GetConfig" }}
+
+*/}}
+{{ $services := slice }}
+{{ $warn_head := "\nHugo Module TND Socials:\n" }}
+{{ with site.Params.tnd_socials.services }}
+  {{ range $service := . }}
+    {{ if and .handle .name }}
+    {{ $services = $services | append $service }}
+    {{ else }}
+      {{ warnf "%s A service is either missing the 'handle' or the `service` parameter. It's been ignored." $warn_head }}
+    {{ end }}
+  {{ end }}
+{{ else }}
+  {{ with site.Social }}
+    {{ range $service, $handle := . }}
+      {{ $services = $services | append (dict "name" $service "handle" $handle) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ return dict "services" $services }}

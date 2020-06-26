@@ -1,0 +1,31 @@
+{{/*
+  GetURL
+  
+  Returns the URL of a given social service either based on the .handle or the .url parameter.
+
+  @author @regisphilibert
+
+  @context Map
+
+  @access private
+
+  @return String
+
+  @example - Go Template
+    {{ $url := partialCached "tnd-socials/private/GetServiceURL" . . }}
+*/}}
+{{ $url := "" }}
+{{ with .url }}
+  {{ $url = . }}
+{{ else }}
+  {{ with .handle }}
+    {{/* Deprecated but if user uses site.Social and set a URL instead of the username as value: */}}
+    {{ if or (in . "https://") (in . "http://") }}
+      {{ $url = . }}
+    {{ else }}
+      {{ $url = printf "https://%s.com/" . }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ return $url }}

@@ -13,7 +13,7 @@
       {{ partial "tnd-socials/follow.html" . }}
     </div>
 */}}
-{{ range partialCached "tnd-socials/func/GetSocials" . . }}
+{{ range partialCached "tnd-socials/GetSocials" . . }}
   <a href="{{ .URL }}" title="{{ .Name }}" class="{{ .Name }} fill-current w-4 no-underline">
     {{ with .SVG }}
       {{ . }}

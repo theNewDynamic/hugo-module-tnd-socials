@@ -4,7 +4,7 @@ module:
   mounts:
   - source: partials
     target: layouts/partials/tnd-socials
-  - source: svgs
-    target: assets/tnd-socials/svgs
+  - source: icons
+    target: assets/tnd-socials/icons
   imports:
     - path: github.com/theNewDynamic/hugo-module-tnd-icons

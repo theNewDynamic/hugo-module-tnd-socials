@@ -1,0 +1,56 @@
+{{/*
+  GetSocials
+  Retrieves the data for social services listed as default or though 
+  slice context.
+
+  @author @regisphilibert
+
+  @context Slice of Strings (.)
+
+  @access private
+
+  @return Slice of Maps
+    - String (.Name)
+      String (.Handle)
+      String (.URL)
+      SVG (String of safe HTML)
+
+*/}}
+{{ $services := slice }}
+{{ with partialCached "tnd-socials/private/GetConfig" "GetConfig" }}
+  {{ with .services }}
+    {{ $services = . }}
+  {{ end }}
+{{ end }}
+{{/* Defaults: */}}
+{{ with $services }}
+  {{ if reflect.IsSlice $ }}
+    {{ $user_services := slice }}
+    {{ range $ }}
+      {{ with where $services "service" . }}
+        {{ with index . 0 }}
+          {{ $user_services = $user_services | append . }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+    {{ with $user_services }}
+      {{ $services = $user_services }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{/* If a service added later on uses a differnet pattern than https://{ service }.com, add to following: */}}
+{{ $return := slice }}
+{{ range $services }}
+  {{ $svg := false }}
+  {{ $icon := .name }}
+  {{ with .icon }}
+    {{ $icon = . }}
+  {{ end }}
+  {{ $url := partialCached "tnd-socials/private/GetServiceURL" . . }}
+  {{ with partialCached "tnd-socials/private/GetIcon" $icon $icon }}
+    {{ $svg = . }}
+  {{ end }}
+  {{ $return = $return | append (dict "URL" $url "Name" (.name | humanize) "Handle" .handle "SVG" $svg) }}
+{{ end }}
+
+{{ return $return }}
