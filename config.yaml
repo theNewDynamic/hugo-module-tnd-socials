@@ -4,6 +4,8 @@ module:
   mounts:
   - source: partials
     target: layouts/partials/tnd-socials
+  - source: console
+    target: layouts/partials/tnd-socials
   - source: icons
     target: assets/tnd-socials/icons
   imports:
