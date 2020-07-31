@@ -15,7 +15,7 @@
   @example - Go Template
     {{ $icon := partialCached "tnd-socials/private/GetIcon" $icon $icon }}
 */}}
-{{ $icon := printf "%s icon is not found" $ }}
+{{ $icon := "" }}
 {{ with resources.Get (printf "tnd-socials/%s.svg" $) }}
   {{ $icon = .Content | safeHTML }}
 {{ else }}
@@ -23,5 +23,8 @@
     {{ $icon = . }}
   {{ end }}
 {{ end }}
-
+{{ with $icon }}{{ else }}
+  {{ $icon = partialCached "tnd-icons/icon" "exclamation-triangle-fill" }}
+  {{ partial "tnd-socials/warn" (printf "%s icon is not found" $) }}
+{{ end }}
 {{ return $icon }}
