@@ -16,33 +16,50 @@
       SVG (String of safe HTML)
 
 */}}
+{{ $Page := dict }}
+{{ $project_services := slice }}
 {{ $services := slice }}
-{{ with partialCached "tnd-socials/private/GetConfig" "GetConfig" }}
-  {{ with .services }}
+{{ with partialCached "tnd-socials/private/GetProjectServices" "GetProjectServices" }}
+    {{ $project_services = . }}
     {{ $services = . }}
-  {{ end }}
 {{ end }}
 {{/* Defaults: */}}
-{{ with $services }}
+{{ $selected_services := slice }}
+
+{{ if or (reflect.IsSlice $) (reflect.IsMap $) }}
   {{ if reflect.IsSlice $ }}
-    {{ $user_services := slice }}
-    {{ range $ }}
-      {{ with where $services "service" . }}
+    {{ $selected_services = . }}
+  {{ else if reflect.IsMap $ }}
+    {{ with $.Page }}
+      {{ $Page = . }}
+    {{ end }}
+    {{ with $.services }}
+      {{ $selected_services = . }}
+    {{ end }}
+  {{ end }}
+  {{ with $selected_services }}
+    {{ $services = slice }}
+    {{ range . }}
+      {{ with where $project_services "name" . }}
         {{ with index . 0 }}
-          {{ $user_services = $user_services | append . }}
+          {{ $services = $services | append . }}
         {{ end }}
       {{ end }}
     {{ end }}
-    {{ with $user_services }}
-      {{ $services = $user_services }}
-    {{ end }}
   {{ end }}
+  
 {{ end }}
+
+
 {{/* If a service added later on uses a differnet pattern than https://{ service }.com, add to following: */}}
 {{ $return := slice }}
-{{ range $services }}
+
+{{ range $service := $services }}
   {{ $svg := false }}
   {{ $icon := .name }}
+  {{ if eq .name "email" }}
+    {{ $icon = "envelope-fill" }}
+  {{ end }}
   {{ with .icon }}
     {{ $icon = . }}
   {{ end }}
@@ -50,7 +67,15 @@
   {{ with partialCached "tnd-socials/private/GetIcon" $icon $icon }}
     {{ $svg = . }}
   {{ end }}
-  {{ $return = $return | append (dict "URL" $url "Name" (.name | humanize) "Handle" .handle "SVG" $svg) }}
+
+  {{ $shareURL := "" }}
+  {{ with $Page }}
+    {{ $args := dict "Page" . "service" $service }}
+    {{ with  partial "tnd-socials/private/GetShareURL" $args }}
+      {{ $shareURL = . }}
+    {{ end }}
+  {{ end }}
+  {{ $return = $return | append (dict "URL" $url "ShareURL" $shareURL "Name" (.name | humanize) "Handle" .handle "SVG" $svg) }}
 {{ end }}
 
 {{ return $return }}

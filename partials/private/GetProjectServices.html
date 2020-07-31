@@ -1,0 +1,33 @@
+{{/*
+  GetProjectServices
+
+  @author @regisphilibert
+
+  @context Type (.name)
+
+  @access public
+
+  @example - Go Template
+    {{ partial "path" context }}
+    {{ partialCached "path" context "variant" }}
+*/}}
+{{ $services := slice }}
+{{ $config := partialCached "tnd-socials/private/GetConfig" "GetConfig" }}
+{{ $warn_head := "\nHugo Module TND Socials:\n" }}
+{{ with $config.services }}
+  {{ range $service := . }}
+    {{ if and .handle .name }}
+    {{ $services = $services | append $service }}
+    {{ else }}
+      {{ warnf "%s A service is either missing the 'handle' or the `service` parameter. It's been ignored." $warn_head }}
+    {{ end }}
+  {{ end }}
+{{ else }}
+  {{ with site.Social }}
+    {{ range $service, $handle := . }}
+      {{ $services = $services | append (dict "name" $service "handle" $handle) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ return $services }}

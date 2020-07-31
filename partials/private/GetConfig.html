@@ -21,22 +21,9 @@
     {{ $config := partialCached "tnd-socials/private/GetConfig" "GetConfig" }}
 
 */}}
-{{ $services := slice }}
-{{ $warn_head := "\nHugo Module TND Socials:\n" }}
-{{ with site.Params.tnd_socials.services }}
-  {{ range $service := . }}
-    {{ if and .handle .name }}
-    {{ $services = $services | append $service }}
-    {{ else }}
-      {{ warnf "%s A service is either missing the 'handle' or the `service` parameter. It's been ignored." $warn_head }}
-    {{ end }}
-  {{ end }}
-{{ else }}
-  {{ with site.Social }}
-    {{ range $service, $handle := . }}
-      {{ $services = $services | append (dict "name" $service "handle" $handle) }}
-    {{ end }}
-  {{ end }}
+{{ $config := dict }}
+{{ with site.Params.tnd_socials }}
+  {{ $config = . }}
 {{ end }}
 
-{{ return dict "services" $services }}
+{{ return $config }}

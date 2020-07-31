@@ -19,11 +19,15 @@
   {{ $url = . }}
 {{ else }}
   {{ with .handle }}
-    {{/* Deprecated but if user uses site.Social and set a URL instead of the username as value: */}}
-    {{ if or (in . "https://") (in . "http://") }}
-      {{ $url = . }}
+    {{ if eq $.name "email" }}
+      {{ $url = print "mailto:" . }}
     {{ else }}
-      {{ $url = printf "https://%s.com/%s" $.name . }}
+      {{/* Deprecated but if user uses site.Social and set a URL instead of the username as value: */}}
+      {{ if or (in . "https://") (in . "http://") }}
+        {{ $url = . }}
+      {{ else }}
+        {{ $url = printf "https://%s.com/%s" $.name . }}
+      {{ end }}
     {{ end }}
   {{ end }}
 {{ end }}
