@@ -1,0 +1,40 @@
+{{/*
+  GetShareURL
+  Retrieve the Share URL of a given service.
+  
+  @author @regisphilibert
+
+  @context Map
+      Page (.Page)
+      Map (.service)
+        String (.name)
+        String (.url)
+        String (.handle)
+
+  @return String
+
+  @access private
+
+  @example - Go Template
+    {{ $args := dict "Page" . "service" $service }}
+    {{ $url := partialCached "tnd-socials/private/GetShareURL" $args $args }}
+*/}}
+{{ $url := "" }}
+{{ with .service }}
+  {{ if eq .name "facebook" }}
+    {{ $url = print "http://www.facebook.com/sharer.php?u=" $.Page.Permalink }}
+  {{ else if eq .name "twitter" }}
+    {{ $url = printf "https://twitter.com/share?url=%s&text=%s" $.Page.Permalink $.Page.Title }}
+    {{ with .handle }}
+      {{ $url = print $url "&via=" . }}
+    {{ end }}
+  {{ else if eq .name "linkedin" }}
+    {{ $url = printf "https://www.linkedin.com/sharing/share-offsite/?url=%s" $.Page.Permalink }}
+  {{ else if eq .name "email" }}
+    {{ $subject := printf "Read %s" $.Page.Title }}
+    {{ $body := print $.Page.Title ", by " site.Title "\n" $.Page.Permalink "\n" }}
+    {{ $url = printf "mailto:?subject=%s.&body=%s" $subject $body }}
+  {{ end }}
+{{ end }}
+
+{{ return $url }}
