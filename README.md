@@ -47,7 +47,7 @@ To simply print links pointing to the project's Social landing pages:
 {{ range partialCached "tnd-socials/GetSocials" "GetSocials" }}
   <a href="{{ .URL }}" title="Follow {{ .Handle }} on {{ .Service }}">
     {{ .SVG }}
-  <a>
+  </a>
 {{ end }}
 ```
 By default, the partial will return all the services set though the module's configuration in their original order. 
@@ -69,7 +69,7 @@ Chosen services discussed above will be hold in a `services` key.
 {{ range partial "tnd-socials/GetSocials" (dict "Page" $ "services" (slice "facebook" "twitter")) }}
   <a href="{{ .ShareURL }}" title="Share on {{ .Service }}">
     {{ .SVG }}
-  <a>
+  </a>
 {{ end }}
 ```
 
