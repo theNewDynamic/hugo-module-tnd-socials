@@ -45,7 +45,7 @@ To simply print links pointing to the project's Social landing pages:
 
 ```
 {{ range partialCached "tnd-socials/GetSocials" "GetSocials" }}
-  <a href="{{ .URL }}" title="Follow {{ .Handle }} on {{ .Service }}">
+  <a href="{{ .URL }}" title="Follow {{ .Handle }} on {{ .Name }}">
     {{ .SVG }}
   </a>
 {{ end }}
