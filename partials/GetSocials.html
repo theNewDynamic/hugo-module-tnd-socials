@@ -75,13 +75,15 @@
   {{ end }}
 
   {{ $shareURL := "" }}
+  {{ $share := false }}
   {{ with $Page }}
     {{ $args := dict "Page" . "service" $service }}
     {{ with  partial "tnd-socials/private/GetShareURL" $args }}
       {{ $shareURL = . }}
+      {{ $share = true }}
     {{ end }}
   {{ end }}
-  {{ $return = $return | append (dict "URL" $url "ShareURL" $shareURL "Name" (.name | humanize) "Handle" .handle "SVG" $svg) }}
+  {{ $return = $return | append (dict "URL" $url "ShareURL" $shareURL "Share" $share "Name" (.name | humanize) "Handle" .handle "SVG" $svg) }}
 {{ end }}
 
 {{ return $return }}
