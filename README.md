@@ -58,7 +58,7 @@ To limit or reorder services, the partial can take a `slice` as context:
 {{ end }}
 ```
 
-##### "Share On.." links
+#### "Share On.." links
 
 The partial can also return a `.ShareURL` key for each services if it receives a `.Page` key among its context. The value is a share URL for the given services.
 (Ex: `https://www.linkedin.com/sharing/share-offsite/?url=https://example.com/that-article`) 
@@ -67,7 +67,7 @@ Chosen services discussed above will be hold in a `services` key.
 
 ```
 {{ range partial "tnd-socials/GetSocials" (dict "Page" $ "services" (slice "facebook" "twitter")) }}
-  <a href="{{ .ShareURL }}" title="Share on {{ .Service }}">
+  <a href="{{ .ShareURL }}" title="Share on {{ .Name }}">
     {{ .SVG }}
   </a>
 {{ end }}
@@ -91,7 +91,7 @@ The module can read Hugo's default `Social` settings but we recommand using the 
 
 ### Services
 The `services` key takes a slice of Maps with the following keys:
-  - __service*__: The name of the service
+  - __name*__: The name of the service
   - __handle*__: The username or handle of the service's profile. Use an email address for the `email` service.
   - __url__: If the profile URL does not follow the conventional `https://www.{service}.com/{handle}` it should be set here.
   - __icon__: Icon file's basename (no extension). Available icons are [here](https://github.com/theNewDynamic/hugo-module-tnd-icons/tree/master/svgs)  
