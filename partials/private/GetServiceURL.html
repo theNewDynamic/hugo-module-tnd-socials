@@ -26,7 +26,7 @@
       {{ if or (in . "https://") (in . "http://") }}
         {{ $url = . }}
       {{ else }}
-        {{ $url = printf "https://%s.com/%s" $.name . }}
+        {{ $url = printf "https://www.%s.com/%s" $.name . }}
       {{ end }}
     {{ end }}
   {{ end }}
