@@ -14,7 +14,7 @@
     </div>
 */}}
 {{ range partialCached "tnd-socials/GetSocials" . . }}
-  <a href="{{ .URL }}" title="{{ .Name }}" class="{{ .Name }} fill-current w-4 no-underline">
+  <a href="{{ .URL }}" title="{{ .Name }}" class="{{ .Name | lower }} fill-current w-4 no-underline">
     {{ with .SVG }}
       {{ . }}
     {{ else }}
